@@ -7,7 +7,7 @@ import (
 
 type TodoUsecase interface {
 	Create(todo *TodoCreateParam) error
-	GetById(req *TodoGetByIdParam) (*entity.Todo, error)
+	GetById(todo *TodoGetByIdParam) (*entity.Todo, error)
 	Update(todo *TodoUpdateParam) error
 	Delete(todo *TodoDeleteParam) error
 }
