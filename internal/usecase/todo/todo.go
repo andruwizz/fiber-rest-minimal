@@ -7,7 +7,7 @@ import (
 
 type TodoUsecase interface {
 	Create(todo *TodoCreateParam) error
-	GetById(todo *TodoGetByIdParam) (*entity.Todo, error)
+	GetById(todo *TodoGetParam) (*entity.Todo, error)
 	Update(todo *TodoUpdateParam) error
 	Delete(todo *TodoDeleteParam) error
 }
@@ -34,9 +34,9 @@ func (u *todoUsecase) Create(req *TodoCreateParam) error {
 	return err
 }
 
-func (u *todoUsecase) GetById(req *TodoGetByIdParam) (*entity.Todo, error) {
+func (u *todoUsecase) GetById(req *TodoGetParam) (*entity.Todo, error) {
 	todo := new(entity.Todo)
-	err := u.repo.GetById(req.ID, todo)
+	err := u.repo.GetById(req.Id, todo)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (u *todoUsecase) Update(req *TodoUpdateParam) error {
 
 func (u *todoUsecase) Delete(req *TodoDeleteParam) error {
 	todo := new(entity.Todo)
-	err := u.repo.GetById(req.ID, todo)
+	err := u.repo.GetById(req.Id, todo)
 	if err != nil {
 		return err
 	}

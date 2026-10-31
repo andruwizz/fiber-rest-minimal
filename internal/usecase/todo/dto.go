@@ -11,10 +11,10 @@ type TodoUpdateParam struct {
 	Done  bool
 }
 
-type TodoGetByIdParam struct {
-	ID string
+type TodoGetParam struct {
+	Id string
 }
 
 type TodoDeleteParam struct {
-	ID string
+	Id string
 }
