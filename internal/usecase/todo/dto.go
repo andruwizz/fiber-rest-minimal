@@ -5,6 +5,11 @@ type TodoCreateParam struct {
 	Done  bool
 }
 
+type TodoListParam struct {
+	Page  int
+	Limit int
+}
+
 type TodoGetParam struct {
 	Id string
 }

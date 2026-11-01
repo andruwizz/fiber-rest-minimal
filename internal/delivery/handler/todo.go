@@ -9,6 +9,7 @@ import (
 
 type TodoHandler interface {
 	Create(c fiber.Ctx) error
+	List(c fiber.Ctx) error
 	Get(c fiber.Ctx) error
 	Update(c fiber.Ctx) error
 	Delete(c fiber.Ctx) error
@@ -39,6 +40,25 @@ func (h *todoHandler) Create(c fiber.Ctx) error {
 	}
 
 	return c.SendStatus(fiber.StatusCreated)
+}
+
+func (h *todoHandler) List(c fiber.Ctx) error {
+	req := new(request.TodoList)
+	if err := c.Bind().Query(req); err != nil {
+		return err
+	}
+
+	dto := &todo.TodoListParam{
+		Limit: req.Limit,
+		Page:  req.Page,
+	}
+
+	res, err := h.usecase.List(dto)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(res)
 }
 
 func (h *todoHandler) Get(c fiber.Ctx) error {

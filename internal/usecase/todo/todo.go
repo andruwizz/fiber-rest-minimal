@@ -2,11 +2,14 @@ package todo
 
 import (
 	"go-something/internal/entity"
+	"go-something/internal/helper"
 	"go-something/internal/repository"
+	"math"
 )
 
 type TodoUsecase interface {
 	Create(todo *TodoCreateParam) error
+	List(todo *TodoListParam) (*entity.PaginatedTodo, error)
 	GetById(todo *TodoGetParam) (*entity.Todo, error)
 	Update(todo *TodoUpdateParam) error
 	Delete(todo *TodoDeleteParam) error
@@ -31,7 +34,30 @@ func (u *todoUsecase) Create(req *TodoCreateParam) error {
 		return err
 	}
 
-	return err
+	return nil
+}
+
+func (u *todoUsecase) List(req *TodoListParam) (*entity.PaginatedTodo, error) {
+	todos := new([]entity.Todo)
+	totalRows := new(int64)
+
+	page := helper.GetPage(req.Page)
+	limit := helper.GetLimit(req.Limit)
+
+	err := u.repo.List(page, limit, totalRows, todos)
+	if err != nil {
+		return nil, err
+	}
+
+	totalPage := int(math.Ceil(float64(*totalRows) / float64(limit)))
+	paginated := &entity.PaginatedTodo{
+		Data:      *todos,
+		Page:      page,
+		Limit:     limit,
+		TotalRows: *totalRows,
+		TotalPage: totalPage,
+	}
+	return paginated, nil
 }
 
 func (u *todoUsecase) GetById(req *TodoGetParam) (*entity.Todo, error) {

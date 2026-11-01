@@ -5,6 +5,11 @@ type TodoCreate struct {
 	Done  bool   `json:"done" form:"done" validate:"required"`
 }
 
+type TodoList struct {
+	Limit int `json:"limit" query:"limit" validate:"numeric"`
+	Page  int `json:"page" query:"page" validate:"numeric"`
+}
+
 type TodoGet struct {
 	Id string `json:"id" form:"id" validate:"required"`
 }

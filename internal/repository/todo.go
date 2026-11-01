@@ -2,6 +2,7 @@ package repository
 
 import (
 	"go-something/internal/entity"
+	"go-something/internal/helper"
 	"go-something/internal/model"
 
 	"gorm.io/gorm"
@@ -9,6 +10,7 @@ import (
 
 type Todo interface {
 	Create(todo *entity.Todo) error
+	List(page, limit int, total *int64, todos *[]entity.Todo) error
 	GetById(id string, todo *entity.Todo) error
 	Update(todo *entity.Todo) error
 	Delete(todo *entity.Todo) error
@@ -25,6 +27,18 @@ func NewTodoRepository(db *gorm.DB) Todo {
 func (r *todoRepository) Create(todo *entity.Todo) error {
 	m := model.FromTodoEntity(todo)
 	return r.db.Create(m).Error
+}
+
+func (r *todoRepository) List(page, limit int, total *int64, todos *[]entity.Todo) error {
+	if err := r.db.Model(&model.Todo{}).Count(total).Error; err != nil {
+		return err
+	}
+
+	if err := r.db.Scopes(helper.Paginate(limit, page)).Find(todos).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *todoRepository) GetById(id string, todo *entity.Todo) error {
