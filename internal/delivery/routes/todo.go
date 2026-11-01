@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"go-something/internal/delivery/handler"
+	"github.com/andruwizz/fiber-rest-minimal/internal/delivery/handler"
 
 	"github.com/gofiber/fiber/v3"
 )

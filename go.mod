@@ -1,4 +1,4 @@
-module go-something
+module github.com/andruwizz/fiber-rest-minimal
 
 go 1.26.0
 

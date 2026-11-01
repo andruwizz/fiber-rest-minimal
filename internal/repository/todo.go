@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"go-something/internal/entity"
-	"go-something/internal/helper"
-	"go-something/internal/model"
+	"github.com/andruwizz/fiber-rest-minimal/internal/entity"
+	"github.com/andruwizz/fiber-rest-minimal/internal/helper"
+	"github.com/andruwizz/fiber-rest-minimal/internal/model"
 
 	"gorm.io/gorm"
 )

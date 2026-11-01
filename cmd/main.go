@@ -1,8 +1,9 @@
 package main
 
 import (
-	"go-something/internal/config"
 	"log"
+
+	"github.com/andruwizz/fiber-rest-minimal/internal/config"
 )
 
 func main() {

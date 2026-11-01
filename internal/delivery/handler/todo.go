@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"go-something/internal/delivery/request"
-	"go-something/internal/usecase/todo"
+	"github.com/andruwizz/fiber-rest-minimal/internal/delivery/request"
+	"github.com/andruwizz/fiber-rest-minimal/internal/usecase/todo"
 
 	"github.com/gofiber/fiber/v3"
 )

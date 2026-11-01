@@ -1,10 +1,11 @@
 package todo
 
 import (
-	"go-something/internal/entity"
-	"go-something/internal/helper"
-	"go-something/internal/repository"
 	"math"
+
+	"github.com/andruwizz/fiber-rest-minimal/internal/entity"
+	"github.com/andruwizz/fiber-rest-minimal/internal/helper"
+	"github.com/andruwizz/fiber-rest-minimal/internal/repository"
 )
 
 type TodoUsecase interface {

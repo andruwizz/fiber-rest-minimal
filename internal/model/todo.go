@@ -1,7 +1,7 @@
 package model
 
 import (
-	"go-something/internal/entity"
+	"github.com/andruwizz/fiber-rest-minimal/internal/entity"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

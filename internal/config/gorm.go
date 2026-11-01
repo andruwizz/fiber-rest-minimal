@@ -1,8 +1,9 @@
 package config
 
 import (
-	"go-something/internal/model"
 	"log"
+
+	"github.com/andruwizz/fiber-rest-minimal/internal/model"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"

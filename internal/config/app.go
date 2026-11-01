@@ -1,10 +1,10 @@
 package config
 
 import (
-	"go-something/internal/delivery/handler"
-	"go-something/internal/delivery/routes"
-	"go-something/internal/repository"
-	"go-something/internal/usecase/todo"
+	"github.com/andruwizz/fiber-rest-minimal/internal/delivery/handler"
+	"github.com/andruwizz/fiber-rest-minimal/internal/delivery/routes"
+	"github.com/andruwizz/fiber-rest-minimal/internal/repository"
+	"github.com/andruwizz/fiber-rest-minimal/internal/usecase/todo"
 
 	"github.com/gofiber/fiber/v3"
 	"gorm.io/gorm"
