@@ -291,3 +291,7 @@ When an operation fails (e.g. record not found or database failure):
   }
 }
 ```
+
+## License
+
+This project is licensed under the [MIT license](LICENSE).
