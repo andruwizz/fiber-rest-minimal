@@ -1,6 +1,7 @@
 package config
 
 import (
+	"go-something/internal/model"
 	"log"
 
 	"gorm.io/driver/sqlite"
@@ -9,7 +10,7 @@ import (
 
 func NewDatabase() *gorm.DB {
 	// Initialize and return a new GORM database connection
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("database.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect database: %v", err)
 	}
@@ -18,6 +19,8 @@ func NewDatabase() *gorm.DB {
 	if err != nil {
 		log.Fatalf("Failed to get database instance: %v", err)
 	}
+
+	db.AutoMigrate(&model.Todo{})
 
 	return db
 }

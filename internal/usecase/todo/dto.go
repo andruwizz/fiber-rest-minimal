@@ -5,14 +5,14 @@ type TodoCreateParam struct {
 	Done  bool
 }
 
+type TodoGetParam struct {
+	Id string
+}
+
 type TodoUpdateParam struct {
 	Id    string
 	Title string
 	Done  bool
-}
-
-type TodoGetParam struct {
-	Id string
 }
 
 type TodoDeleteParam struct {
