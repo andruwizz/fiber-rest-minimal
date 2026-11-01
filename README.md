@@ -271,7 +271,7 @@ When request validation fails (e.g. missing required `title`), the API returns s
 {
   "success": false,
   "error": {
-    "message": "Key: 'TodoCreate.Title' Error:Field validation for 'Title' failed on the 'required' tag.",
+    "message": "Field validation for 'Title' failed on the 'required' tag.",
     "errors": {
       "title": "Field validation for 'Title' failed on the 'required' tag."
     }
