@@ -21,7 +21,9 @@ func NewDatabase() *gorm.DB {
 		log.Fatalf("Failed to get database instance: %v", err)
 	}
 
-	db.AutoMigrate(&model.Todo{})
+	if err := db.AutoMigrate(&model.Todo{}); err != nil {
+		log.Fatalf("Failed to migrate database: %v", err)
+	}
 
 	return db
 }
