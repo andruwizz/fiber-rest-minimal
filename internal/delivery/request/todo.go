@@ -11,15 +11,15 @@ type TodoList struct {
 }
 
 type TodoGet struct {
-	Id string `json:"id" uri:"id" validate:"required"`
+	Id string `uri:"id" validate:"required"`
 }
 
 type TodoUpdate struct {
-	Id    string `json:"id" uri:"id" validate:"required"`
+	Id    string `uri:"id" validate:"required"`
 	Title string `json:"title" form:"title" validate:"required"`
 	Done  bool   `json:"done" form:"done,default=false" validate:"boolean"`
 }
 
 type TodoDelete struct {
-	Id string `json:"id" uri:"id" validate:"required"`
+	Id string `uri:"id" validate:"required"`
 }
