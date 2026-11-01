@@ -27,7 +27,7 @@ func NewTodoHandler(u todo.TodoUsecase) TodoHandler {
 func (h *todoHandler) Create(c fiber.Ctx) error {
 	req := new(request.TodoCreate)
 	if err := c.Bind().Body(req); err != nil {
-		return err
+		return response.ErrorValidation(c, fiber.StatusBadRequest, err)
 	}
 
 	dto := &todo.TodoCreateParam{
@@ -37,7 +37,7 @@ func (h *todoHandler) Create(c fiber.Ctx) error {
 
 	err := h.usecase.Create(dto)
 	if err != nil {
-		return err
+		return response.ErrorResource(c, fiber.StatusInternalServerError, err)
 	}
 
 	return response.Empty(c, fiber.StatusCreated)
@@ -46,7 +46,7 @@ func (h *todoHandler) Create(c fiber.Ctx) error {
 func (h *todoHandler) List(c fiber.Ctx) error {
 	req := new(request.TodoList)
 	if err := c.Bind().Query(req); err != nil {
-		return err
+		return response.ErrorValidation(c, fiber.StatusBadRequest, err)
 	}
 
 	dto := &todo.TodoListParam{
@@ -56,7 +56,7 @@ func (h *todoHandler) List(c fiber.Ctx) error {
 
 	res, err := h.usecase.List(dto)
 	if err != nil {
-		return err
+		return response.ErrorResource(c, fiber.StatusInternalServerError, err)
 	}
 
 	return response.Collection(c, fiber.StatusOK, res)
@@ -65,7 +65,7 @@ func (h *todoHandler) List(c fiber.Ctx) error {
 func (h *todoHandler) Get(c fiber.Ctx) error {
 	req := new(request.TodoGet)
 	if err := c.Bind().URI(req); err != nil {
-		return err
+		return response.ErrorValidation(c, fiber.StatusBadRequest, err)
 	}
 
 	dto := &todo.TodoGetParam{
@@ -74,7 +74,7 @@ func (h *todoHandler) Get(c fiber.Ctx) error {
 
 	res, err := h.usecase.GetById(dto)
 	if err != nil {
-		return err
+		return response.ErrorResource(c, fiber.StatusInternalServerError, err)
 	}
 
 	return response.Resource(c, fiber.StatusOK, res)
@@ -85,7 +85,7 @@ func (h *todoHandler) Update(c fiber.Ctx) error {
 	req.Id = c.Params("id")
 
 	if err := c.Bind().Body(req); err != nil {
-		return err
+		return response.ErrorValidation(c, fiber.StatusBadRequest, err)
 	}
 
 	dto := &todo.TodoUpdateParam{
@@ -96,7 +96,7 @@ func (h *todoHandler) Update(c fiber.Ctx) error {
 
 	err := h.usecase.Update(dto)
 	if err != nil {
-		return err
+		return response.ErrorResource(c, fiber.StatusInternalServerError, err)
 	}
 
 	return response.Empty(c, fiber.StatusOK)
@@ -105,7 +105,7 @@ func (h *todoHandler) Update(c fiber.Ctx) error {
 func (h *todoHandler) Delete(c fiber.Ctx) error {
 	req := new(request.TodoDelete)
 	if err := c.Bind().URI(req); err != nil {
-		return err
+		return response.ErrorValidation(c, fiber.StatusBadRequest, err)
 	}
 
 	dto := &todo.TodoDeleteParam{
@@ -114,7 +114,7 @@ func (h *todoHandler) Delete(c fiber.Ctx) error {
 
 	err := h.usecase.Delete(dto)
 	if err != nil {
-		return err
+		return response.ErrorResource(c, fiber.StatusInternalServerError, err)
 	}
 
 	return response.Empty(c, fiber.StatusOK)

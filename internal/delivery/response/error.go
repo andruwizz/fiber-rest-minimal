@@ -34,7 +34,7 @@ func extractValidationError(ve validator.ValidationErrors) (string, map[string]s
 	return message, errs
 }
 
-func ErrorValidation(ctx fiber.Ctx, code int, err error) {
+func ErrorValidation(ctx fiber.Ctx, code int, err error) error {
 	msg, errs := extractValidationError(err.(validator.ValidationErrors))
 	res := ErrorResponse{
 		Success: false,
@@ -44,10 +44,10 @@ func ErrorValidation(ctx fiber.Ctx, code int, err error) {
 		},
 	}
 
-	ctx.Status(code).JSON(res)
+	return ctx.Status(code).JSON(res)
 }
 
-func ErrorResource(ctx fiber.Ctx, code int, err error) {
+func ErrorResource(ctx fiber.Ctx, code int, err error) error {
 	res := ErrorResponse{
 		Success: false,
 		Error: errorDetail{
@@ -55,5 +55,5 @@ func ErrorResource(ctx fiber.Ctx, code int, err error) {
 		},
 	}
 
-	ctx.Status(code).JSON(res)
+	return ctx.Status(code).JSON(res)
 }
