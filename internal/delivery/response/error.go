@@ -35,6 +35,17 @@ func extractValidationError(ve validator.ValidationErrors) (string, map[string]s
 }
 
 func ErrorValidation(ctx fiber.Ctx, code int, err error) error {
+	if ierr, ok := err.(*fiber.BindError); ok {
+		err = ierr.Err
+		res := ErrorResponse{
+			Success: false,
+			Error: errorDetail{
+				Message: "Request body is invalid",
+			},
+		}
+		return ctx.Status(code).JSON(res)
+	}
+
 	msg, errs := extractValidationError(err.(validator.ValidationErrors))
 	res := ErrorResponse{
 		Success: false,
