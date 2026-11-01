@@ -10,7 +10,7 @@ import (
 
 type TodoUsecase interface {
 	Create(todo *TodoCreateParam) error
-	List(todo *TodoListParam) (*entity.PaginatedTodo, error)
+	List(todo *TodoListParam) (*entity.Pagination[entity.Todo], error)
 	GetById(todo *TodoGetParam) (*entity.Todo, error)
 	Update(todo *TodoUpdateParam) error
 	Delete(todo *TodoDeleteParam) error
@@ -38,7 +38,7 @@ func (u *todoUsecase) Create(req *TodoCreateParam) error {
 	return nil
 }
 
-func (u *todoUsecase) List(req *TodoListParam) (*entity.PaginatedTodo, error) {
+func (u *todoUsecase) List(req *TodoListParam) (*entity.Pagination[entity.Todo], error) {
 	todos := new([]entity.Todo)
 	totalRows := new(int64)
 
@@ -51,7 +51,7 @@ func (u *todoUsecase) List(req *TodoListParam) (*entity.PaginatedTodo, error) {
 	}
 
 	totalPage := int(math.Ceil(float64(*totalRows) / float64(limit)))
-	paginated := &entity.PaginatedTodo{
+	paginated := &entity.Pagination[entity.Todo]{
 		Data:      *todos,
 		Page:      page,
 		Limit:     limit,

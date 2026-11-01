@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/andruwizz/fiber-rest-minimal/internal/delivery/request"
+	"github.com/andruwizz/fiber-rest-minimal/internal/delivery/response"
 	"github.com/andruwizz/fiber-rest-minimal/internal/usecase/todo"
 
 	"github.com/gofiber/fiber/v3"
@@ -39,7 +40,7 @@ func (h *todoHandler) Create(c fiber.Ctx) error {
 		return err
 	}
 
-	return c.SendStatus(fiber.StatusCreated)
+	return response.Empty(c, fiber.StatusCreated)
 }
 
 func (h *todoHandler) List(c fiber.Ctx) error {
@@ -58,7 +59,7 @@ func (h *todoHandler) List(c fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(res)
+	return response.Collection(c, fiber.StatusOK, res)
 }
 
 func (h *todoHandler) Get(c fiber.Ctx) error {
@@ -76,7 +77,7 @@ func (h *todoHandler) Get(c fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(res)
+	return response.Resource(c, fiber.StatusOK, res)
 }
 
 func (h *todoHandler) Update(c fiber.Ctx) error {
@@ -98,7 +99,7 @@ func (h *todoHandler) Update(c fiber.Ctx) error {
 		return err
 	}
 
-	return c.SendStatus(fiber.StatusNoContent)
+	return response.Empty(c, fiber.StatusOK)
 }
 
 func (h *todoHandler) Delete(c fiber.Ctx) error {
@@ -116,5 +117,5 @@ func (h *todoHandler) Delete(c fiber.Ctx) error {
 		return err
 	}
 
-	return c.SendStatus(fiber.StatusNoContent)
+	return response.Empty(c, fiber.StatusOK)
 }
