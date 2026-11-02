@@ -60,6 +60,7 @@ fiber-rest-minimal/
 ├── .gitignore
 ├── go.mod
 ├── go.sum
+├── LICENSE
 └── README.md
 ```
 
