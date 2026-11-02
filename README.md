@@ -120,7 +120,7 @@ go run cmd/main.go
 
 The server will start on port `3000` by default: `http://localhost:3000`. On first start, the database file `database.db` is created and migrated automatically.
 
-## API Reference
+## API Endpoints
 
 Base URL: `http://localhost:3000`
 
