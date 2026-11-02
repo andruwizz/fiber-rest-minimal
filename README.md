@@ -90,12 +90,12 @@ HTTP Request
 [Database] (SQLite / database.db)
 ```
 
-## Getting Started
-
-### Prerequisites
+## Prerequisites
 
 - [Go](https://go.dev/dl/) 1.22+ (configured with Go 1.26 toolchain)
 - GCC or SQLite runtime tools (for SQLite CGo driver if applicable)
+
+## Getting Started
 
 ### Installation
 
