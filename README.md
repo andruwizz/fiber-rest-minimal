@@ -14,14 +14,12 @@ A clean, modular RESTful API boilerplate built with [Go](https://go.dev/) and [F
 
 ## Tech Stack
 
-| Layer / Role | Technology | Purpose |
-|:---|:---|:---|
-| **Language** | [Go](https://go.dev/) (1.26+) | Strongly typed, compiled systems and backend language |
-| **Web Framework** | [Fiber v3](https://github.com/gofiber/fiber) (`v3.6.1`) | Fast, Express-inspired HTTP framework built on Fasthttp |
-| **ORM** | [GORM](https://gorm.io/) (`v1.31.2`) | Developer-friendly ORM for schema migration and database queries |
-| **Database** | [SQLite](https://www.sqlite.org/) (`driver/sqlite v1.6.0`) | Lightweight, zero-configuration embedded relational database |
-| **Validation** | [validator/v10](https://github.com/go-playground/validator) (`v10.30.5`) | Robust struct tag validation integrated with Fiber |
-| **UUID Generator** | [google/uuid](https://github.com/google/uuid) (`v1.6.0`) | Generates unique UUIDv4 primary keys |
+- **Language**: [Go](https://go.dev/) (1.26+)
+- **Web Framework**: [Fiber v3](https://github.com/gofiber/fiber) (v3.6.1)
+- **ORM**: [GORM](https://gorm.io/) (v1.31.2)
+- **Database**: [SQLite](https://www.sqlite.org/) (driver/sqlite v1.6.0)
+- **Validation**: [validator/v10](https://github.com/go-playground/validator) (v10.30.5)
+- **UUID Generator**: [google/uuid](https://github.com/google/uuid) (v1.6.0)
 
 ## Project Structure
 
