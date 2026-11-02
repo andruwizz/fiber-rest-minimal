@@ -26,7 +26,6 @@ A clean, modular RESTful API boilerplate built with [Go](https://go.dev/) and [F
 ## Project Structure
 
 ```text
-fiber-rest-minimal/
 ├── cmd/
 │   └── main.go                     # Application entry point
 ├── internal/
