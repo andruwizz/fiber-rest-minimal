@@ -35,12 +35,12 @@ func (h *todoHandler) Create(c fiber.Ctx) error {
 		Done:  req.Done,
 	}
 
-	err := h.usecase.Create(dto)
+	res, err := h.usecase.Create(dto)
 	if err != nil {
 		return response.ErrorResource(c, fiber.StatusBadRequest, err)
 	}
 
-	return response.Empty(c, fiber.StatusCreated)
+	return response.Resource(c, fiber.StatusCreated, res)
 }
 
 func (h *todoHandler) List(c fiber.Ctx) error {

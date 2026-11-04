@@ -9,7 +9,7 @@ import (
 )
 
 type TodoUsecase interface {
-	Create(todo *TodoCreateParam) error
+	Create(todo *TodoCreateParam) (*entity.Todo, error)
 	List(todo *TodoListParam) (*entity.Pagination[entity.Todo], error)
 	GetById(todo *TodoGetParam) (*entity.Todo, error)
 	Update(todo *TodoUpdateParam) error
@@ -24,7 +24,7 @@ func NewTodoUsecase(repo repository.Todo) TodoUsecase {
 	return &todoUsecase{repo}
 }
 
-func (u *todoUsecase) Create(req *TodoCreateParam) error {
+func (u *todoUsecase) Create(req *TodoCreateParam) (*entity.Todo, error) {
 	todo := &entity.Todo{
 		Title: req.Title,
 		Done:  req.Done,
@@ -32,10 +32,10 @@ func (u *todoUsecase) Create(req *TodoCreateParam) error {
 
 	err := u.repo.Create(todo)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return todo, nil
 }
 
 func (u *todoUsecase) List(req *TodoListParam) (*entity.Pagination[entity.Todo], error) {

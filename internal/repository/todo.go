@@ -26,7 +26,11 @@ func NewTodoRepository(db *gorm.DB) Todo {
 
 func (r *todoRepository) Create(todo *entity.Todo) error {
 	m := model.FromTodoEntity(todo)
-	return r.db.Create(m).Error
+	if err := r.db.Create(m).Error; err != nil {
+		return err
+	}
+	*todo = *m.ToTodoEntity()
+	return nil
 }
 
 func (r *todoRepository) List(page, limit int, total *int64, todos *[]entity.Todo) error {
