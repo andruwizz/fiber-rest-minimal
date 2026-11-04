@@ -63,13 +63,8 @@ func (h *todoHandler) List(c fiber.Ctx) error {
 }
 
 func (h *todoHandler) Get(c fiber.Ctx) error {
-	req := new(request.TodoGet)
-	if err := c.Bind().URI(req); err != nil {
-		return response.ErrorValidation(c, fiber.StatusBadRequest, err)
-	}
-
 	dto := &todo.TodoGetParam{
-		Id: req.Id,
+		Id: c.Params("id"),
 	}
 
 	res, err := h.usecase.GetById(dto)
@@ -82,14 +77,12 @@ func (h *todoHandler) Get(c fiber.Ctx) error {
 
 func (h *todoHandler) Update(c fiber.Ctx) error {
 	req := new(request.TodoUpdate)
-	req.Id = c.Params("id")
-
 	if err := c.Bind().Body(req); err != nil {
 		return response.ErrorValidation(c, fiber.StatusBadRequest, err)
 	}
 
 	dto := &todo.TodoUpdateParam{
-		Id:    req.Id,
+		Id:    c.Params("id"),
 		Title: req.Title,
 		Done:  req.Done,
 	}
@@ -103,13 +96,8 @@ func (h *todoHandler) Update(c fiber.Ctx) error {
 }
 
 func (h *todoHandler) Delete(c fiber.Ctx) error {
-	req := new(request.TodoDelete)
-	if err := c.Bind().URI(req); err != nil {
-		return response.ErrorValidation(c, fiber.StatusBadRequest, err)
-	}
-
 	dto := &todo.TodoDeleteParam{
-		Id: req.Id,
+		Id: c.Params("id"),
 	}
 
 	err := h.usecase.Delete(dto)
