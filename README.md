@@ -92,8 +92,8 @@ HTTP Request
 
 ## Prerequisites
 
-- [Go](https://go.dev/dl/) 1.22+ (configured with Go 1.26 toolchain)
-- GCC or SQLite runtime tools (for SQLite CGo driver if applicable)
+- [Go](https://go.dev/dl/) 1.26+
+- SQLite runtime tools (for SQLite CGo driver if applicable)
 
 ## Getting Started
 
