@@ -39,23 +39,20 @@ func (u *todoUsecase) Create(req *TodoCreateParam) (*entity.Todo, error) {
 }
 
 func (u *todoUsecase) List(req *TodoListParam) (*entity.Pagination[entity.Todo], error) {
-	todos := new([]entity.Todo)
-	totalRows := new(int64)
-
 	page := helper.GetPage(req.Page)
 	limit := helper.GetLimit(req.Limit)
 
-	err := u.repo.List(page, limit, totalRows, todos)
+	todos, totalRows, err := u.repo.List(page, limit)
 	if err != nil {
 		return nil, err
 	}
 
-	totalPage := int(math.Ceil(float64(*totalRows) / float64(limit)))
+	totalPage := int(math.Ceil(float64(totalRows) / float64(limit)))
 	paginated := &entity.Pagination[entity.Todo]{
-		Data:      *todos,
+		Data:      todos,
 		Page:      page,
 		Limit:     limit,
-		TotalRows: *totalRows,
+		TotalRows: totalRows,
 		TotalPage: totalPage,
 	}
 	return paginated, nil

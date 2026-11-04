@@ -10,7 +10,7 @@ import (
 
 type Todo interface {
 	Create(todo *entity.Todo) error
-	List(page, limit int, total *int64, todos *[]entity.Todo) error
+	List(page, limit int) ([]entity.Todo, int64, error)
 	GetById(id string, todo *entity.Todo) error
 	Update(todo *entity.Todo) error
 	Delete(todo *entity.Todo) error
@@ -33,16 +33,22 @@ func (r *todoRepository) Create(todo *entity.Todo) error {
 	return nil
 }
 
-func (r *todoRepository) List(page, limit int, total *int64, todos *[]entity.Todo) error {
-	if err := r.db.Model(&model.Todo{}).Count(total).Error; err != nil {
-		return err
+func (r *todoRepository) List(page, limit int) ([]entity.Todo, int64, error) {
+	var total int64
+	if err := r.db.Model(&model.Todo{}).Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
 
-	if err := r.db.Scopes(helper.Paginate(limit, page)).Find(todos).Error; err != nil {
-		return err
+	var models []model.Todo
+	if err := r.db.Scopes(helper.Paginate(limit, page)).Find(&models).Error; err != nil {
+		return nil, 0, err
 	}
 
-	return nil
+	todos := make([]entity.Todo, len(models))
+	for i, m := range models {
+		todos[i] = *m.ToTodoEntity()
+	}
+	return todos, total, nil
 }
 
 func (r *todoRepository) GetById(id string, todo *entity.Todo) error {
