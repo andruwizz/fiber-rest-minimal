@@ -42,6 +42,7 @@ A clean, modular RESTful API boilerplate built with [Go](https://go.dev/) and [F
 │   │   └── routes/
 │   │       └── todo.go             # Route declarations
 │   ├── entity/
+│   │   ├── error.go                # Domain error definitions
 │   │   ├── pagination.go           # Generic pagination domain entity
 │   │   └── todo.go                 # Todo domain entity
 │   ├── helper/
@@ -73,7 +74,7 @@ HTTP Request
      │
      ▼
 [Handler] (internal/delivery/handler)
-  - Binds Request Body / Query / URI
+  - Binds Request Body / Query & extracts route parameters
   - Validates structs via Fiber validator
      │
      ▼
@@ -112,10 +113,17 @@ HTTP Request
 
 ### Running the Application
 
-To run the application locally:
+To run the application directly:
 
 ```bash
 go run cmd/main.go
+```
+
+To build and run as a standalone binary:
+
+```bash
+go build -o bin/server cmd/main.go
+./bin/server
 ```
 
 The server will start on port `3000` by default: `http://localhost:3000`. On first start, the database file `database.db` is created and migrated automatically.
@@ -287,6 +295,21 @@ When request validation fails (e.g. missing required `title`), the API returns s
     "errors": {
       "title": "Field validation for 'Title' failed on the 'required' tag."
     }
+  }
+}
+```
+
+If multiple fields fail validation, `message` will highlight the first error along with the count of remaining errors (e.g. `Field validation for 'Title' failed on the 'required' tag. (and 1 more)`).
+
+### Invalid Payload Error (`400 Bad Request`)
+
+When the request payload contains malformed JSON or cannot be bound:
+
+```json
+{
+  "success": false,
+  "error": {
+    "message": "request payload is invalid"
   }
 }
 ```
