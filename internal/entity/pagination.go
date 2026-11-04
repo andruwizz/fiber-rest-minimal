@@ -1,7 +1,7 @@
 package entity
 
 type entityType interface {
-	Todo
+	any
 }
 
 type Pagination[T entityType] struct {
