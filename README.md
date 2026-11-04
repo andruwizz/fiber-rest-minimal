@@ -291,15 +291,28 @@ When request validation fails (e.g. missing required `title`), the API returns s
 }
 ```
 
-### Resource / Server Error (`400 Bad Request`)
+### Resource Not Found (`404 Not Found`)
 
-When an operation fails (e.g. record not found or database failure):
+When an entity is not found by ID (e.g. `GET`, `PUT`, or `DELETE` with an invalid ID):
 
 ```json
 {
   "success": false,
   "error": {
     "message": "record not found"
+  }
+}
+```
+
+### Server Error (`500 Internal Server Error`)
+
+When an operation fails (e.g. database failure):
+
+```json
+{
+  "success": false,
+  "error": {
+    "message": "failed to execute operation"
   }
 }
 ```
