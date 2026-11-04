@@ -94,12 +94,12 @@ func (h *todoHandler) Update(c fiber.Ctx) error {
 		Done:  req.Done,
 	}
 
-	err := h.usecase.Update(dto)
+	res, err := h.usecase.Update(dto)
 	if err != nil {
 		return response.ErrorResource(c, fiber.StatusBadRequest, err)
 	}
 
-	return response.Empty(c, fiber.StatusOK)
+	return response.Resource(c, fiber.StatusOK, res)
 }
 
 func (h *todoHandler) Delete(c fiber.Ctx) error {

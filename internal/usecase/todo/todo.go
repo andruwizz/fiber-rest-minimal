@@ -12,7 +12,7 @@ type TodoUsecase interface {
 	Create(todo *TodoCreateParam) (*entity.Todo, error)
 	List(todo *TodoListParam) (*entity.Pagination[entity.Todo], error)
 	GetById(todo *TodoGetParam) (*entity.Todo, error)
-	Update(todo *TodoUpdateParam) error
+	Update(todo *TodoUpdateParam) (*entity.Todo, error)
 	Delete(todo *TodoDeleteParam) error
 }
 
@@ -70,11 +70,11 @@ func (u *todoUsecase) GetById(req *TodoGetParam) (*entity.Todo, error) {
 	return todo, nil
 }
 
-func (u *todoUsecase) Update(req *TodoUpdateParam) error {
+func (u *todoUsecase) Update(req *TodoUpdateParam) (*entity.Todo, error) {
 	todo := new(entity.Todo)
 	err := u.repo.GetById(req.Id, todo)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	todo.Title = req.Title
@@ -82,9 +82,9 @@ func (u *todoUsecase) Update(req *TodoUpdateParam) error {
 
 	err = u.repo.Update(todo)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return todo, nil
 }
 
 func (u *todoUsecase) Delete(req *TodoDeleteParam) error {

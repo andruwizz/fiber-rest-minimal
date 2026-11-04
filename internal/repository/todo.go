@@ -59,6 +59,7 @@ func (r *todoRepository) Update(todo *entity.Todo) error {
 	if err := r.db.Save(m).Error; err != nil {
 		return err
 	}
+	*todo = *m.ToTodoEntity()
 	return nil
 }
 
