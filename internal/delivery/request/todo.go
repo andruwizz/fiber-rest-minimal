@@ -6,8 +6,8 @@ type TodoCreate struct {
 }
 
 type TodoList struct {
-	Limit int `json:"limit" query:"limit" validate:"numeric"`
-	Page  int `json:"page" query:"page" validate:"numeric"`
+	Limit int `json:"limit" query:"limit" validate:"numeric,max=100"`
+	Page  int `json:"page" query:"page" validate:"numeric,max=100"`
 }
 
 type TodoGet struct {
