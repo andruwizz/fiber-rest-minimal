@@ -28,7 +28,7 @@ type EmptyResponse struct {
 }
 
 type entityType interface {
-	entity.Todo
+	any
 }
 
 func Empty(ctx fiber.Ctx, code int) error {
