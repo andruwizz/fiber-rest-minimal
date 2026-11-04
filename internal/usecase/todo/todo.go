@@ -9,11 +9,11 @@ import (
 )
 
 type TodoUsecase interface {
-	Create(todo *TodoCreateParam) (*entity.Todo, error)
-	List(todo *TodoListParam) (*entity.Pagination[entity.Todo], error)
-	GetById(todo *TodoGetParam) (*entity.Todo, error)
-	Update(todo *TodoUpdateParam) (*entity.Todo, error)
-	Delete(todo *TodoDeleteParam) error
+	Create(req *TodoCreateParam) (*entity.Todo, error)
+	List(req *TodoListParam) (*entity.Pagination[entity.Todo], error)
+	GetById(req *TodoGetParam) (*entity.Todo, error)
+	Update(req *TodoUpdateParam) (*entity.Todo, error)
+	Delete(req *TodoDeleteParam) error
 }
 
 type todoUsecase struct {
