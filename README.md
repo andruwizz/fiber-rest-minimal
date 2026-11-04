@@ -150,7 +150,14 @@ Base URL: `http://localhost:3000`
 - **Response** (`201 Created`):
   ```json
   {
-    "success": true
+    "success": true,
+    "data": {
+      "id": "e4b6bf5a-2735-4d08-a5ea-79fbb9fb811b",
+      "title": "Buy groceries",
+      "done": false,
+      "created_at": 1730455721,
+      "updated_at": 1730455721
+    }
   }
   ```
 - **cURL Example**:
@@ -233,7 +240,14 @@ Base URL: `http://localhost:3000`
 - **Response** (`200 OK`):
   ```json
   {
-    "success": true
+    "success": true,
+    "data": {
+      "id": "e4b6bf5a-2735-4d08-a5ea-79fbb9fb811b",
+      "title": "Buy groceries and cook dinner",
+      "done": true,
+      "created_at": 1730455721,
+      "updated_at": 1730455721
+    }
   }
   ```
 - **cURL Example**:
