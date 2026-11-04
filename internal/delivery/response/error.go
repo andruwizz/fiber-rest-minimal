@@ -24,11 +24,20 @@ type ErrorResponse struct {
 func extractValidationError(ve validator.ValidationErrors) (string, map[string]string) {
 	errs := map[string]string{}
 	for _, f := range ve {
-		err := strings.Split(f.Error(), "Error:")
-		errs[strings.ToLower(f.Field())] = fmt.Sprintf("%s.", err[1])
+		parts := strings.Split(f.Error(), "Error:")
+		errText := f.Error()
+		if len(parts) > 1 {
+			errText = strings.TrimSpace(parts[1])
+		}
+		errs[strings.ToLower(f.Field())] = fmt.Sprintf("%s.", strings.TrimSuffix(errText, "."))
 	}
 
-	message := fmt.Sprintf("%s.", strings.Split(ve[0].Error(), "Error:")[1])
+	firstPart := ve[0].Error()
+	parts := strings.Split(firstPart, "Error:")
+	if len(parts) > 1 {
+		firstPart = strings.TrimSpace(parts[1])
+	}
+	message := fmt.Sprintf("%s.", strings.TrimSuffix(firstPart, "."))
 	if errCount := len(ve); errCount > 1 {
 		message = fmt.Sprintf("%s (and %d more)", message, errCount-1)
 	}
@@ -37,26 +46,30 @@ func extractValidationError(ve validator.ValidationErrors) (string, map[string]s
 }
 
 func ErrorValidation(ctx fiber.Ctx, code int, err error) error {
-	if ierr, ok := err.(*fiber.BindError); ok {
-		err = ierr.Err
+	var bindErr *fiber.BindError
+	if errors.As(err, &bindErr) {
+		err = bindErr.Err
+	}
+
+	var ve validator.ValidationErrors
+	if errors.As(err, &ve) {
+		msg, errs := extractValidationError(ve)
 		res := ErrorResponse{
 			Success: false,
 			Error: errorDetail{
-				Message: "request body is invalid",
+				Message: msg,
+				Errors:  errs,
 			},
 		}
 		return ctx.Status(code).JSON(res)
 	}
 
-	msg, errs := extractValidationError(err.(validator.ValidationErrors))
 	res := ErrorResponse{
 		Success: false,
 		Error: errorDetail{
-			Message: msg,
-			Errors:  errs,
+			Message: "request payload is invalid",
 		},
 	}
-
 	return ctx.Status(code).JSON(res)
 }
 
