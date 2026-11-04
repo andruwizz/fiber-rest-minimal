@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/andruwizz/fiber-rest-minimal/internal/entity"
 	"github.com/andruwizz/fiber-rest-minimal/internal/helper"
 	"github.com/andruwizz/fiber-rest-minimal/internal/model"
@@ -41,6 +43,9 @@ func (r *todoRepository) List(page, limit int) ([]entity.Todo, int64, error) {
 
 	var models []model.Todo
 	if err := r.db.Scopes(helper.Paginate(limit, page)).Find(&models).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 0, nil
+		}
 		return nil, 0, err
 	}
 
@@ -54,6 +59,9 @@ func (r *todoRepository) List(page, limit int) ([]entity.Todo, int64, error) {
 func (r *todoRepository) GetById(id string, todo *entity.Todo) error {
 	m := model.FromTodoEntity(todo)
 	if err := r.db.Where("id = ?", id).Take(m).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return entity.ErrRecordNotFound
+		}
 		return err
 	}
 	*todo = *m.ToTodoEntity()

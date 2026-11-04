@@ -37,7 +37,7 @@ func (h *todoHandler) Create(c fiber.Ctx) error {
 
 	res, err := h.usecase.Create(dto)
 	if err != nil {
-		return response.ErrorResource(c, fiber.StatusBadRequest, err)
+		return response.ErrorResource(c, err)
 	}
 
 	return response.Resource(c, fiber.StatusCreated, res)
@@ -56,7 +56,7 @@ func (h *todoHandler) List(c fiber.Ctx) error {
 
 	res, err := h.usecase.List(dto)
 	if err != nil {
-		return response.ErrorResource(c, fiber.StatusBadRequest, err)
+		return response.ErrorResource(c, err)
 	}
 
 	return response.Collection(c, fiber.StatusOK, res)
@@ -69,7 +69,7 @@ func (h *todoHandler) Get(c fiber.Ctx) error {
 
 	res, err := h.usecase.GetById(dto)
 	if err != nil {
-		return response.ErrorResource(c, fiber.StatusBadRequest, err)
+		return response.ErrorResource(c, err)
 	}
 
 	return response.Resource(c, fiber.StatusOK, res)
@@ -89,7 +89,7 @@ func (h *todoHandler) Update(c fiber.Ctx) error {
 
 	res, err := h.usecase.Update(dto)
 	if err != nil {
-		return response.ErrorResource(c, fiber.StatusBadRequest, err)
+		return response.ErrorResource(c, err)
 	}
 
 	return response.Resource(c, fiber.StatusOK, res)
@@ -102,7 +102,7 @@ func (h *todoHandler) Delete(c fiber.Ctx) error {
 
 	err := h.usecase.Delete(dto)
 	if err != nil {
-		return response.ErrorResource(c, fiber.StatusBadRequest, err)
+		return response.ErrorResource(c, err)
 	}
 
 	return response.Empty(c, fiber.StatusOK)

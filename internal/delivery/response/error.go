@@ -1,11 +1,13 @@
 package response
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/andruwizz/fiber-rest-minimal/internal/entity"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -40,7 +42,7 @@ func ErrorValidation(ctx fiber.Ctx, code int, err error) error {
 		res := ErrorResponse{
 			Success: false,
 			Error: errorDetail{
-				Message: "Request body is invalid",
+				Message: "request body is invalid",
 			},
 		}
 		return ctx.Status(code).JSON(res)
@@ -58,7 +60,7 @@ func ErrorValidation(ctx fiber.Ctx, code int, err error) error {
 	return ctx.Status(code).JSON(res)
 }
 
-func ErrorResource(ctx fiber.Ctx, code int, err error) error {
+func errorResource(ctx fiber.Ctx, code int, err error) error {
 	res := ErrorResponse{
 		Success: false,
 		Error: errorDetail{
@@ -67,4 +69,11 @@ func ErrorResource(ctx fiber.Ctx, code int, err error) error {
 	}
 
 	return ctx.Status(code).JSON(res)
+}
+
+func ErrorResource(c fiber.Ctx, err error) error {
+	if errors.Is(err, entity.ErrRecordNotFound) {
+		return errorResource(c, fiber.StatusNotFound, err)
+	}
+	return errorResource(c, fiber.StatusInternalServerError, err)
 }
