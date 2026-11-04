@@ -8,9 +8,9 @@ import (
 
 func RegisterTodoRoutes(r *fiber.App, h handler.TodoHandler) {
 	todo := r.Group("/todos")
-	todo.Post("/", h.Create)
-	todo.Get("/", h.List)
-	todo.Get("/:id", h.Get)
-	todo.Put("/:id", h.Update)
-	todo.Delete("/:id", h.Delete)
+	todo.Post("", h.Create)
+	todo.Get("", h.List)
+	todo.Get(":id", h.Get)
+	todo.Put(":id", h.Update)
+	todo.Delete(":id", h.Delete)
 }
