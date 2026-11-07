@@ -99,7 +99,7 @@ HTTP Request
 ## Prerequisites
 
 - [Go](https://go.dev/dl/) 1.26+
-- SQLite runtime tools (for SQLite CGo driver if applicable)
+- A C compiler (e.g. `gcc`) and `CGO_ENABLED=1` — required by the CGo-based SQLite driver (`mattn/go-sqlite3`)
 
 ## Getting Started
 
@@ -131,7 +131,7 @@ go build -o bin/server cmd/main.go
 ./bin/server
 ```
 
-The server will start on port `3000` by default: `http://localhost:3000`. On first start, the database file `database.db` is created and migrated automatically.
+The server listens on port `3000` (hardcoded in `cmd/main.go`): `http://localhost:3000`. On first start, the database file `database.db` is created and migrated automatically in the **current working directory**, so run the server from the same directory each time.
 
 ## API Endpoints
 
@@ -188,6 +188,8 @@ Base URL: `http://localhost:3000`
 - **Query Parameters**:
   - `page` (optional, default: `1`, max: `100`): Page number
   - `limit` (optional, default: `10`, max: `100`): Items per page
+  - Values `<= 0` or omitted fall back to the defaults; values above `100` or non-numeric values return `400`.
+  - Results are not explicitly ordered.
 - **Response** (`200 OK`):
   ```json
   {
@@ -242,6 +244,7 @@ Base URL: `http://localhost:3000`
 ### 4. Update Todo
 
 - **Endpoint**: `PUT /todos/:id`
+- **Note**: This is a full replace — `title` is required, and an omitted `done` defaults to `false`.
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
   ```json
@@ -259,7 +262,7 @@ Base URL: `http://localhost:3000`
       "title": "Buy groceries and cook dinner",
       "done": true,
       "created_at": 1730455721,
-      "updated_at": 1730455721
+      "updated_at": 1730459321
     }
   }
   ```
@@ -334,7 +337,7 @@ When an entity is not found by ID (e.g. `GET`, `PUT`, or `DELETE` with an invali
 
 ### Server Error (`500 Internal Server Error`)
 
-When an operation fails (e.g. database failure):
+When an operation fails (e.g. database failure). The underlying error is logged server-side and not exposed to the client:
 
 ```json
 {
@@ -352,6 +355,8 @@ Run the test suite:
 ```bash
 go test ./test/
 ```
+
+The tests exercise the HTTP handlers and routes against an in-memory mock use case (`internal/usecase/todo/mock`); the repository and SQLite layers are not covered.
 
 ## License
 
