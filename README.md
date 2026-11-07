@@ -19,6 +19,7 @@ A clean, modular RESTful API boilerplate built with [Go](https://go.dev/) and [F
 - **ORM**: [GORM](https://gorm.io/) (v1.31.2)
 - **Database**: [SQLite](https://www.sqlite.org/) (driver/sqlite v1.6.0)
 - **Validation**: [validator/v10](https://github.com/go-playground/validator) (v10.30.5)
+- **Testing**: [testify](https://github.com/stretchr/testify) (v1.12.1)
 - **UUID Generator**: [google/uuid](https://github.com/google/uuid) (v1.6.0)
 
 ## Project Structure
@@ -53,8 +54,12 @@ A clean, modular RESTful API boilerplate built with [Go](https://go.dev/) and [F
 │   │   └── todo.go                 # Database operations layer
 │   └── usecase/
 │       └── todo/
+│           ├── mock/
+│           │   └── todo.go         # Use case mock for testing
 │           ├── dto.go              # Use case parameter transfer objects
 │           └── todo.go             # Core business logic implementation
+├── test/
+│   └── todo_test.go                # Todo API Test
 ├── .gitignore
 ├── go.mod
 ├── go.sum
@@ -338,6 +343,14 @@ When an operation fails (e.g. database failure):
     "message": "failed to execute operation"
   }
 }
+```
+
+## Testing
+
+Run the test suite:
+
+```bash
+go test ./test/
 ```
 
 ## License
