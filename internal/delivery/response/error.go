@@ -3,6 +3,7 @@ package response
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
@@ -73,11 +74,11 @@ func ErrorValidation(ctx fiber.Ctx, code int, err error) error {
 	return ctx.Status(code).JSON(res)
 }
 
-func errorResource(ctx fiber.Ctx, code int, err error) error {
+func errorResource(ctx fiber.Ctx, code int, message string) error {
 	res := ErrorResponse{
 		Success: false,
 		Error: errorDetail{
-			Message: err.Error(),
+			Message: message,
 		},
 	}
 
@@ -86,7 +87,9 @@ func errorResource(ctx fiber.Ctx, code int, err error) error {
 
 func ErrorResource(c fiber.Ctx, err error) error {
 	if errors.Is(err, entity.ErrRecordNotFound) {
-		return errorResource(c, fiber.StatusNotFound, err)
+		return errorResource(c, fiber.StatusNotFound, err.Error())
 	}
-	return errorResource(c, fiber.StatusInternalServerError, err)
+
+	log.Printf("internal error: %v", err)
+	return errorResource(c, fiber.StatusInternalServerError, "failed to execute operation")
 }
