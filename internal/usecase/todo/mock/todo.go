@@ -53,15 +53,26 @@ func (u *mockTodoUsecase) List(req *todo.TodoListParam) (*entity.Pagination[enti
 		todos = append(todos, v)
 	}
 
-	offset := (page - 1) * limit
-	totalPage := int(math.Ceil(float64(len(todos)) / float64(limit)))
+	totalRows := int64(len(todos))
+	totalPage := int64(0)
+	if totalRows > 0 {
+		totalPage = int64(math.Ceil(float64(totalRows) / float64(limit)))
+	}
 
+	offset := (page - 1) * limit
+	var data []entity.Todo
+	if offset < len(todos) {
+		end := min(offset+limit, len(todos))
+		data = todos[offset:end]
+	} else {
+		data = []entity.Todo{}
+	}
 	pagination := &entity.Pagination[entity.Todo]{
-		Data:       todos[offset:min(offset+limit, len(todos))],
+		Data:       data,
 		Page:       page,
 		Limit:      limit,
-		TotalRows:  int64(len(todos)),
-		TotalPages: int64(totalPage),
+		TotalRows:  totalRows,
+		TotalPages: totalPage,
 	}
 
 	return pagination, nil
