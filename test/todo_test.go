@@ -8,6 +8,8 @@ import (
 
 	"testing"
 
+	"fmt"
+
 	"github.com/andruwizz/fiber-rest-minimal/internal/config"
 	"github.com/andruwizz/fiber-rest-minimal/internal/delivery/handler"
 	"github.com/andruwizz/fiber-rest-minimal/internal/delivery/request"
@@ -57,6 +59,51 @@ func TestCreateTodo(t *testing.T) {
 	assert.NotNil(t, res.Data.Id)
 	assert.NotNil(t, res.Data.CreatedAt)
 	assert.NotNil(t, res.Data.UpdatedAt)
+}
+
+func TestListTodo(t *testing.T) {
+	// Arrange
+	app, mockUsecase := NewTestSetup()
+	dto := &todo.TodoCreateParam{Title: "Test Todo 1", Done: true}
+	mockUsecase.Create(dto)
+
+	dto = &todo.TodoCreateParam{Title: "Test Todo 2", Done: false}
+	mockUsecase.Create(dto)
+
+	dto = &todo.TodoCreateParam{Title: "Test Todo 3", Done: true}
+	mockUsecase.Create(dto)
+
+	dto = &todo.TodoCreateParam{Title: "Test Todo 4", Done: false}
+	mockUsecase.Create(dto)
+
+	dto = &todo.TodoCreateParam{Title: "Test Todo 5", Done: false}
+	mockUsecase.Create(dto)
+
+	// Act
+	page := 1
+	limit := 2
+	query := fmt.Sprintf("/todos?page=%d&limit=%d", page, limit)
+
+	req := httptest.NewRequest(fiber.MethodGet, query, nil)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, _ := app.Test(req)
+
+	// Assert
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+
+	var resData response.ListResponse[entity.Todo]
+	json.Unmarshal(body, &resData)
+
+	assert.NoError(t, resp.Body.Close())
+	assert.Equal(t, fiber.StatusOK, resp.StatusCode)
+	assert.NotNil(t, resData.Meta)
+	assert.NotNil(t, resData.Data)
+	assert.Equal(t, page, resData.Meta.Page)
+	assert.Equal(t, limit, resData.Meta.PerPage)
+	assert.Equal(t, resData.Meta.TotalPages, 3)
+	assert.Equal(t, resData.Meta.Total, 5)
 }
 
 func TestGetTodo(t *testing.T) {
