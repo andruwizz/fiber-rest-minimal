@@ -87,6 +87,36 @@ func TestGetTodo(t *testing.T) {
 	assert.NotNil(t, resData.Data.UpdatedAt)
 }
 
+func TestUpdateTodo(t *testing.T) {
+	// Arrange
+	app, mockUsecase := NewTestSetup()
+	dto := &todo.TodoCreateParam{Title: "Test Todo", Done: true}
+	res, _ := mockUsecase.Create(dto)
+
+	updatePayload := request.TodoUpdate{Title: "Updated Todo", Done: false}
+	reqPayload, _ := json.Marshal(updatePayload)
+
+	// Act
+	req := httptest.NewRequest(fiber.MethodPut, "/todos/"+res.Id, bytes.NewReader(reqPayload))
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, _ := app.Test(req)
+
+	// Assert
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+
+	var resData response.DataResponse[entity.Todo]
+	json.Unmarshal(body, &resData)
+
+	assert.NoError(t, resp.Body.Close())
+	assert.Equal(t, fiber.StatusOK, resp.StatusCode)
+	assert.Equal(t, updatePayload.Title, resData.Data.Title)
+	assert.Equal(t, updatePayload.Done, resData.Data.Done)
+	assert.NotNil(t, resData.Data.Id)
+	assert.NotNil(t, resData.Data.CreatedAt)
+	assert.NotNil(t, resData.Data.UpdatedAt)
+}
 func TestDeleteTodo(t *testing.T) {
 	// Arrange
 	app, mockUsecase := NewTestSetup()
