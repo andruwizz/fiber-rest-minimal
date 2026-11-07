@@ -49,16 +49,18 @@ func TestCreateTodo(t *testing.T) {
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 
-	var res response.DataResponse[entity.Todo]
-	json.Unmarshal(body, &res)
+	var resData response.DataResponse[entity.Todo]
+	err := json.Unmarshal(body, &resData)
+	assert.Nil(t, err)
 
 	assert.NoError(t, resp.Body.Close())
 	assert.Equal(t, fiber.StatusCreated, resp.StatusCode)
-	assert.Equal(t, payload.Title, res.Data.Title)
-	assert.Equal(t, payload.Done, res.Data.Done)
-	assert.NotNil(t, res.Data.Id)
-	assert.NotNil(t, res.Data.CreatedAt)
-	assert.NotNil(t, res.Data.UpdatedAt)
+	assert.NotEmpty(t, resData.Success)
+	assert.Equal(t, payload.Title, resData.Data.Title)
+	assert.Equal(t, payload.Done, resData.Data.Done)
+	assert.NotNil(t, resData.Data.Id)
+	assert.NotNil(t, resData.Data.CreatedAt)
+	assert.NotNil(t, resData.Data.UpdatedAt)
 }
 
 func TestListTodo(t *testing.T) {
@@ -94,10 +96,12 @@ func TestListTodo(t *testing.T) {
 	body, _ := io.ReadAll(resp.Body)
 
 	var resData response.ListResponse[entity.Todo]
-	json.Unmarshal(body, &resData)
+	err := json.Unmarshal(body, &resData)
+	assert.Nil(t, err)
 
 	assert.NoError(t, resp.Body.Close())
 	assert.Equal(t, fiber.StatusOK, resp.StatusCode)
+	assert.NotEmpty(t, resData.Success)
 	assert.NotNil(t, resData.Meta)
 	assert.NotNil(t, resData.Data)
 	assert.Equal(t, page, resData.Meta.Page)
@@ -123,10 +127,12 @@ func TestGetTodo(t *testing.T) {
 	body, _ := io.ReadAll(resp.Body)
 
 	var resData response.DataResponse[entity.Todo]
-	json.Unmarshal(body, &resData)
+	err := json.Unmarshal(body, &resData)
+	assert.Nil(t, err)
 
 	assert.NoError(t, resp.Body.Close())
 	assert.Equal(t, fiber.StatusOK, resp.StatusCode)
+	assert.NotEmpty(t, resData.Success)
 	assert.Equal(t, dto.Title, resData.Data.Title)
 	assert.Equal(t, dto.Done, resData.Data.Done)
 	assert.NotNil(t, resData.Data.Id)
@@ -154,10 +160,12 @@ func TestUpdateTodo(t *testing.T) {
 	body, _ := io.ReadAll(resp.Body)
 
 	var resData response.DataResponse[entity.Todo]
-	json.Unmarshal(body, &resData)
+	err := json.Unmarshal(body, &resData)
+	assert.Nil(t, err)
 
 	assert.NoError(t, resp.Body.Close())
 	assert.Equal(t, fiber.StatusOK, resp.StatusCode)
+	assert.NotEmpty(t, resData.Success)
 	assert.Equal(t, updatePayload.Title, resData.Data.Title)
 	assert.Equal(t, updatePayload.Done, resData.Data.Done)
 	assert.NotNil(t, resData.Data.Id)
@@ -177,9 +185,14 @@ func TestDeleteTodo(t *testing.T) {
 	resp, _ := app.Test(req)
 
 	// Assert
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+
 	var resData response.EmptyResponse
+	err := json.Unmarshal(body, &resData)
+	assert.Nil(t, err)
 
 	assert.NoError(t, resp.Body.Close())
 	assert.Equal(t, fiber.StatusOK, resp.StatusCode)
-	assert.NotNil(t, resData.Success)
+	assert.NotEmpty(t, resData.Success)
 }
