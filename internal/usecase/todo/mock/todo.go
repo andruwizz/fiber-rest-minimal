@@ -2,10 +2,12 @@ package mock
 
 import (
 	"math"
+	"time"
 
 	"github.com/andruwizz/fiber-rest-minimal/internal/entity"
 	"github.com/andruwizz/fiber-rest-minimal/internal/helper"
 	"github.com/andruwizz/fiber-rest-minimal/internal/usecase/todo"
+	"github.com/google/uuid"
 )
 
 type TodoUsecase interface {
@@ -16,21 +18,29 @@ type TodoUsecase interface {
 	Delete(req *todo.TodoDeleteParam) error
 }
 
-type mockTodoUsecase struct{}
+type mockTodoUsecase struct {
+	db map[string]entity.Todo
+}
 
 func NewMockTodoUsecase() TodoUsecase {
-	return &mockTodoUsecase{}
+	return &mockTodoUsecase{
+		db: make(map[string]entity.Todo),
+	}
 }
 
 func (u *mockTodoUsecase) Create(req *todo.TodoCreateParam) (*entity.Todo, error) {
+	id := uuid.New().String()
+	timeNow := time.Now().Unix()
+
 	todo := &entity.Todo{
-		Id:        "398c1df7-64b1-40ac-9a04-3599b7f9a501",
+		Id:        id,
 		Title:     req.Title,
 		Done:      req.Done,
-		CreatedAt: 1793774478,
-		UpdatedAt: 1793774478,
+		CreatedAt: timeNow,
+		UpdatedAt: timeNow,
 	}
 
+	u.db[id] = *todo
 	return todo, nil
 }
 
@@ -38,98 +48,16 @@ func (u *mockTodoUsecase) List(req *todo.TodoListParam) (*entity.Pagination[enti
 	page := helper.GetPage(req.Page)
 	limit := helper.GetLimit(req.Limit)
 
-	todos := []entity.Todo{
-		{
-			Id:        "398c1df7-64b1-40ac-9a04-3599b7f9a501",
-			Title:     "Sample Todo 1",
-			Done:      false,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "498c1df7-64b1-40ac-9a04-3599b7f9a502",
-			Title:     "Sample Todo 2",
-			Done:      true,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "598c1df7-64b1-40ac-9a04-3599b7f9a503",
-			Title:     "Sample Todo 3",
-			Done:      false,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "698c1df7-64b1-40ac-9a04-3599b7f9a504",
-			Title:     "Sample Todo 4",
-			Done:      true,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "798c1df7-64b1-40ac-9a04-3599b7f9a505",
-			Title:     "Sample Todo 5",
-			Done:      false,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "898c1df7-64b1-40ac-9a04-3599b7f9a506",
-			Title:     "Sample Todo 6",
-			Done:      true,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "998c1df7-64b1-40ac-9a04-3599b7f9a507",
-			Title:     "Sample Todo 7",
-			Done:      false,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "a98c1df7-64b1-40ac-9a04-3599b7f9a508",
-			Title:     "Sample Todo 8",
-			Done:      true,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "b98c1df7-64b1-40ac-9a04-3599b7f9a509",
-			Title:     "Sample Todo 9",
-			Done:      false,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "c98c1df7-64b1-40ac-9a04-3599b7f9a510",
-			Title:     "Sample Todo 10",
-			Done:      true,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "d98c1df7-64b1-40ac-9a04-3599b7f9a511",
-			Title:     "Sample Todo 11",
-			Done:      false,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
-		{
-			Id:        "e98c1df7-64b1-40ac-9a04-3599b7f9a512",
-			Title:     "Sample Todo 12",
-			Done:      true,
-			CreatedAt: 1793774478,
-			UpdatedAt: 1793774478,
-		},
+	todos := []entity.Todo{}
+	for _, v := range u.db {
+		todos = append(todos, v)
 	}
 
 	offset := (page - 1) * limit
 	totalPage := int(math.Ceil(float64(len(todos)) / float64(limit)))
 
 	pagination := &entity.Pagination[entity.Todo]{
-		Data:       todos[offset : offset+limit],
+		Data:       todos[offset:min(offset+limit, len(todos))],
 		Page:       page,
 		Limit:      limit,
 		TotalRows:  int64(len(todos)),
@@ -140,29 +68,37 @@ func (u *mockTodoUsecase) List(req *todo.TodoListParam) (*entity.Pagination[enti
 }
 
 func (u *mockTodoUsecase) GetById(req *todo.TodoGetParam) (*entity.Todo, error) {
-	todo := &entity.Todo{
-		Id:        "398c1df7-64b1-40ac-9a04-3599b7f9a501",
-		Title:     "Sample Todo",
-		Done:      false,
-		CreatedAt: 1793774478,
-		UpdatedAt: 1793774478,
+	found, ok := u.db[req.Id]
+	if !ok {
+		return nil, entity.ErrRecordNotFound
 	}
+	todo := &found
 
 	return todo, nil
 }
 
 func (u *mockTodoUsecase) Update(req *todo.TodoUpdateParam) (*entity.Todo, error) {
-	todo := &entity.Todo{
-		Id:        "398c1df7-64b1-40ac-9a04-3599b7f9a501",
-		Title:     req.Title,
-		Done:      req.Done,
-		CreatedAt: 1793774478,
-		UpdatedAt: 1793774478,
+	found, ok := u.db[req.Id]
+	if !ok {
+		return nil, entity.ErrRecordNotFound
 	}
+	todo := &found
+
+	todo.Title = req.Title
+	todo.Done = req.Done
+	todo.UpdatedAt = time.Now().Unix()
+
+	u.db[req.Id] = *todo
 
 	return todo, nil
 }
 
 func (u *mockTodoUsecase) Delete(req *todo.TodoDeleteParam) error {
+	_, ok := u.db[req.Id]
+	if !ok {
+		return entity.ErrRecordNotFound
+	}
+	delete(u.db, req.Id)
+
 	return nil
 }
