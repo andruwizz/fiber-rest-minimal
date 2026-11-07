@@ -86,3 +86,23 @@ func TestGetTodo(t *testing.T) {
 	assert.NotNil(t, resData.Data.CreatedAt)
 	assert.NotNil(t, resData.Data.UpdatedAt)
 }
+
+func TestDeleteTodo(t *testing.T) {
+	// Arrange
+	app, mockUsecase := NewTestSetup()
+	dto := &todo.TodoCreateParam{Title: "Test Todo", Done: true}
+	res, _ := mockUsecase.Create(dto)
+
+	// Act
+	req := httptest.NewRequest(fiber.MethodDelete, "/todos/"+res.Id, nil)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, _ := app.Test(req)
+
+	// Assert
+	var resData response.EmptyResponse
+
+	assert.NoError(t, resp.Body.Close())
+	assert.Equal(t, fiber.StatusOK, resp.StatusCode)
+	assert.NotNil(t, resData.Success)
+}
