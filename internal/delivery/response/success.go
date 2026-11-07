@@ -56,7 +56,7 @@ func Collection[T entityType](ctx fiber.Ctx, code int, p *entity.Pagination[T]) 
 			Page:       p.Page,
 			PerPage:    p.Limit,
 			Total:      int(p.TotalRows),
-			TotalPages: p.TotalPage,
+			TotalPages: int(p.TotalPages),
 		},
 	}
 

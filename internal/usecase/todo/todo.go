@@ -49,11 +49,11 @@ func (u *todoUsecase) List(req *TodoListParam) (*entity.Pagination[entity.Todo],
 
 	totalPage := int(math.Ceil(float64(totalRows) / float64(limit)))
 	paginated := &entity.Pagination[entity.Todo]{
-		Data:      todos,
-		Page:      page,
-		Limit:     limit,
-		TotalRows: totalRows,
-		TotalPage: totalPage,
+		Data:       todos,
+		Page:       page,
+		Limit:      limit,
+		TotalRows:  totalRows,
+		TotalPages: int64(totalPage),
 	}
 	return paginated, nil
 }
